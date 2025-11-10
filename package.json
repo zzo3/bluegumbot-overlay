@@ -2,9 +2,11 @@
   "name": "twitch-bot",
   "version": "1.0.0",
   "description": "Multi-platform streaming bot for Twitch and Kick",
-  "main": "backend/bot.js",
+  "main": "backend/server.js",
   "scripts": {
-    "start": "node backend/bot.js"
+    "start": "node backend/server.js",   // Railway 預設啟動 WebSocket 廣播
+    "bot": "node backend/bot.js",        // 本地測試 Twitch/Kick bot
+    "ws": "node backend/server.js"       // 手動啟動 WebSocket server
   },
   "keywords": [
     "twitch",

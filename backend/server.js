@@ -1,35 +1,40 @@
-// backend/server.js
 import http from 'http';
 import { WebSocketServer } from 'ws';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const PORT = process.env.PORT || 8080;
-const server = http.createServer();
+
+// 建立 HTTP server（可選，用來保持 Railway 運行）
+const server = http.createServer((req, res) => {
+  res.writeHead(200);
+  res.end('WebSocket server is running');
+});
+
+// 建立 WebSocket server
 const wss = new WebSocketServer({ server });
 
 const clients = new Set();
 
 wss.on('connection', (ws) => {
+  console.log('[WS] New client connected');
   clients.add(ws);
 
-  ws.on('message', (msg) => {
-    // 最小化廣播：收到任何文字就原樣廣播
+  ws.on('message', (message) => {
+    console.log(`[WS] Received: ${message}`);
+    // 廣播給所有連線中的 client
     for (const client of clients) {
-      if (client.readyState === client.OPEN) {
-        client.send(msg.toString());
+      if (client.readyState === ws.OPEN) {
+        client.send(message.toString());
       }
     }
   });
 
-  ws.on('close', () => clients.delete(ws));
-});
-
-// 健康檢查 (可選)
-server.on('request', (req, res) => {
-  if (req.url === '/health') {
-    res.writeHead(200).end('ok');
-  } else {
-    res.writeHead(404).end('not found');
-  }
+  ws.on('close', () => {
+    console.log('[WS] Client disconnected');
+    clients.delete(ws);
+  });
 });
 
 server.listen(PORT, () => {

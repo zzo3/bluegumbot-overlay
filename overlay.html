@@ -1,39 +1,16 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-HK">
 <head>
   <meta charset="UTF-8" />
-  <title>Kamgee Overlay</title>
-  <style>
-    body { margin: 0; background: transparent; overflow: hidden; }
-    #announcement {
-      position: absolute;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,0.7);
-      color: white;
-      padding: 10px 20px;
-      font-size: 24px;
-      border-radius: 8px;
-      font-family: sans-serif;
-    }
-  </style>
+  <title>Overlay</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="announcement" style="display:none;"></div>
+  <div id="overlayContainer">
+    <div id="messageBox"></div>
+    <div id="effectLayer"></div>
+  </div>
 
-  <script>
-    const ws = new WebSocket("wss://bluegumbot.up.railway.app");
-
-    ws.onmessage = msg => {
-      const data = JSON.parse(msg.data);
-      if (data.type === "announce") {
-        const box = document.getElementById("announcement");
-        box.textContent = data.text;
-        box.style.display = "block";
-        setTimeout(() => box.style.display = "none", 5000);
-      }
-    };
-  </script>
+  <script src="websocketBridge.js"></script>
 </body>
 </html>

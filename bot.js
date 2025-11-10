@@ -6,32 +6,45 @@ import { handleGameCommand } from "./public/gameCommands.js";
 
 dotenv.config();
 
+const port = process.env.PORT || 8080;
+const wsServer = new WebSocket.Server({ port });
+
 let cafeEnabled = true;
 const bannedUsers = new Set();
 const clients = new Set();
-
-const wsServer = new WebSocket.Server({ port: 8080 });
 
 wsServer.on("connection", (socket) => {
   clients.add(socket);
 
   socket.on("message", (msg) => {
-    const data = JSON.parse(msg);
-    if (data.type === "banListUpdate") {
-      bannedUsers.clear();
-      data.bannedUsers.forEach(u => bannedUsers.add(u));
-    }
-    if (data.type === "cafeToggle") {
-      cafeEnabled = data.enabled;
+    try {
+      const data = JSON.parse(msg);
+
+      if (data.type === "banListUpdate") {
+        bannedUsers.clear();
+        data.bannedUsers.forEach(u => bannedUsers.add(u));
+      }
+
+      if (data.type === "cafeToggle") {
+        cafeEnabled = data.enabled;
+      }
+    } catch (err) {
+      console.error("接收到無效訊息：", err.message);
     }
   });
 
-  socket.on("close", () => clients.delete(socket));
+  socket.on("close", () => {
+    clients.delete(socket);
+  });
 });
 
 function broadcast(data) {
   const msg = JSON.stringify(data);
-  clients.forEach(client => client.readyState === 1 && client.send(msg));
+  clients.forEach(client => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(msg);
+    }
+  });
 }
 
 // 每 60 秒查詢 Twitch 遊戲名稱
@@ -60,3 +73,5 @@ function onChat(user, message) {
 function sendMessage(text) {
   broadcast({ type: "message", text });
 }
+
+console.log(`✅ WebSocket server 已啟動於 port ${port}`);

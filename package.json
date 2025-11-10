@@ -4,9 +4,9 @@
   "description": "Multi-platform streaming bot for Twitch and Kick",
   "main": "backend/server.js",
   "scripts": {
-    "start": "node backend/server.js",   // Railway 預設啟動 WebSocket 廣播
-    "bot": "node backend/bot.js",        // 本地測試 Twitch/Kick bot
-    "ws": "node backend/server.js"       // 手動啟動 WebSocket server
+    "start": "node backend/server.js",
+    "bot": "node backend/bot.js",
+    "ws": "node backend/server.js"
   },
   "keywords": [
     "twitch",

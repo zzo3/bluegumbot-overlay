@@ -1,8 +1,14 @@
 // overlayMain.js
-const WS_URL = 'wss://bluegumbot-production.up.railway.app';
-const chatDiv = document.getElementById('chat');
+// 自動偵測 Railway domain，若不存在則使用 localhost
+const domain = (typeof process !== 'undefined' && process.env?.RAILWAY_PUBLIC_DOMAIN)
+  ? process.env.RAILWAY_PUBLIC_DOMAIN
+  : 'localhost:8080';
 
-// 建立 WebSocket 連線
+const WS_URL = domain.includes('localhost')
+  ? `ws://${domain}`
+  : `wss://${domain}`;
+
+const chatDiv = document.getElementById('chat');
 const ws = new WebSocket(WS_URL);
 
 // 連線成功
@@ -14,7 +20,6 @@ ws.onopen = () => {
 // 收到訊息
 ws.onmessage = (event) => {
   try {
-    // 嘗試解析 JSON，如果不是 JSON 就顯示原始字串
     let parsed;
     try {
       parsed = JSON.parse(event.data);

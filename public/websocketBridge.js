@@ -1,4 +1,4 @@
-const socket = new WebSocket("wss://your-websocket-server");
+const socket = new WebSocket("wss://bluegumbot-production.up.railway.app");
 
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data);
@@ -26,3 +26,4 @@ function triggerEffect(name, user) {
   layer.appendChild(effect);
   setTimeout(() => layer.removeChild(effect), 4000);
 }
+

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kamgee 控制面板</title>
+</head>
+<body>
+  <h2>📢 發送聊天室公告</h2>
+  <input id="msg" type="text" placeholder="輸入公告訊息" />
+  <button onclick="send()">送出</button>
+
+  <script>
+    const ws = new WebSocket("wss://bluegumbot.up.railway.app");
+
+    ws.onopen = () => console.log("✅ WebSocket 已連線");
+    ws.onerror = err => console.error("❌ WebSocket 錯誤", err);
+    ws.onmessage = msg => console.log("📨 收到回應", msg.data);
+
+    function send() {
+      const text = document.getElementById("msg").value;
+      ws.send(JSON.stringify({ type: "announce", text }));
+    }
+  </script>
+</body>
+</html>

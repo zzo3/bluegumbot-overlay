@@ -1,0 +1,28 @@
+TwitchBot/
+├── .env                # ✅ 本機環境變數（不提交）
+├── .env.example        # ✅ 範本檔，供其他人參考
+├── .gitignore          # ✅ 忽略敏感與編譯檔案
+├── bot.js              # ✅ 主控邏輯（部署至 Railway）
+├── config.js           # ✅ 全域設定
+├── package.json        # ✅ Node.js 專案設定
+├── twitch/
+│   └── twitchGameMonitor.js  # ✅ Twitch API 模組
+├── public/             # ✅ 前端模組（部署至 GitHub Pages）
+│   ├── overlay.html
+│   ├── settingsPanel.html
+│   ├── style.css
+│   ├── badwords.json
+│   ├── announcer.js
+│   ├── chatCommands.js
+│   ├── gameCommands.js
+│   ├── kickBridge.js
+│   ├── streamMonitor.js
+│   ├── utils.js
+│   └── websocketBridge.js
+
+git clone https://github.com/你的帳號/TwitchBot.git
+cd TwitchBot
+npm install
+cp .env.example .env
+# 編輯 .env 並填入你的 Twitch 憑證
+node bot.js

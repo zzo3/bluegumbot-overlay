@@ -1,27 +1,24 @@
-// overlayMain.js
+// 最小化測試版 overlayMain.js
 const WS_URL = 'wss://bluegumbot-production.up.railway.app';
 const chatDiv = document.getElementById('chat');
 
-// 建立 WebSocket 連線
 const ws = new WebSocket(WS_URL);
 
 // 連線成功
 ws.onopen = () => {
+  console.log('[Overlay] Connected to WS');
   chatDiv.innerHTML += '<p>[open] connected</p>';
 };
 
 // 收到訊息
 ws.onmessage = (event) => {
-  try {
-    const data = event.data;
-    chatDiv.innerHTML += `<p>[msg] ${data}</p>`;
-  } catch (err) {
-    console.error('[Overlay] Failed to parse message:', err);
-  }
+  console.log('[Overlay] Message:', event.data);
+  chatDiv.innerHTML += `<p>[msg] ${event.data}</p>`;
 };
 
 // 連線關閉
 ws.onclose = () => {
+  console.log('[Overlay] Disconnected');
   chatDiv.innerHTML += '<p>[close] disconnected</p>';
 };
 
